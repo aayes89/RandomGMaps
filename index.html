@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+	<title>GMap Random Gen</title>
+  	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  	<meta charset="utf-8">
 
         <style>
             #map {
@@ -37,64 +40,59 @@
         <!-- jQuery CDN -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>
-            // counter for online cars...
-          var points_count = 0;
-          let pos;
-          var markers = [];           
-          var map;
-          function initMap() {    // Google Map Initialization...             
-				    getActualPos();       // Get actual location, needs permission
-				    const radius = 1000;  // 1 km								    
             
+          var points_count = 0; 	// counter for visited markers
+          let pos;			// actual location
+          var markers = [];           	// array of marker
+          var map;			// 
+          function initMap() {    // Google Map Initialization function
+	    getActualPos();       // Get actual location, needs permission
+  	    const radius = 1000;  // 1 km            
             var i = 0;
             while(i<9){				
               const newPos = getRandomLocation(pos, radius);
               AddDPMarkerIco(newPos);     // add a new marker on map              
               i++;
             }
-            }
+           }
 
 
-            // This Function generates a random location based on a radius
-            function getRandomLocation(center, radius) {
-              // Convert the radius from meters to latitud and longitude degree
-              const degRadius = radius / 111000; // 1 grado = 111km
-              // Generates random coordinates
-              const lat = center.lat + (Math.random() * 2 - 1) * degRadius;
-              const lng = center.lng + (Math.random() * 2 - 1) * degRadius / Math.cos(center.lat * Math.PI / 180);
-              return { lat, lng };
-            }
-
-
-			
-			function getActualPos(){
-			// Try HTML5 geolocation
-			  if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(position => {
-				  pos = {
-					lat: position.coords.latitude,
-					lng: position.coords.longitude
-				  };
-				  //alert(pos.lat+","+pos.lng);
-				  map = new google.maps.Map(document.getElementById('map'), {
-					center: pos,
-					zoom: 15,
-					mapTypeId: 'terrain'
-				  });
-				  bounds.extend(pos);
-
-				  infoWindow.setPosition(pos);
-				  infoWindow.setContent('Location found.');
-				  infoWindow.open(map);
-				  map.setCenter(pos);
-				}, () => {
-				  // Browser supports geolocation, but user has denied permission
-				  handleLocationError(true, infoWindow);
-				});
-			  }
-			}
-
-            // This Function will create a SVG icon with angle and add/display that marker on the map
+           // This Function generates a random location based on a radius
+           function getRandomLocation(center, radius) {
+             // Convert the radius from meters to latitud and longitude degree
+             const degRadius = radius / 111000; // 1 grado = 111km
+             // Generates random coordinates
+             const lat = center.lat + (Math.random() * 2 - 1) * degRadius;
+             const lng = center.lng + (Math.random() * 2 - 1) * degRadius / Math.cos(center.lat * Math.PI / 180);
+             return { lat, lng };
+           }
+ 	   
+	function getActualPos(){
+		// Try HTML5 geolocation
+	 if (navigator.geolocation) {
+	   navigator.geolocation.getCurrentPosition(position => {
+		pos = {
+			lat: position.coords.latitude,
+			lng: position.coords.longitude
+		};
+		//alert(pos.lat+","+pos.lng);
+	map = new google.maps.Map(document.getElementById('map'), {
+		center: pos,
+		zoom: 15,
+		mapTypeId: 'terrain'
+	});
+	bounds.extend(pos);
+	infoWindow.setPosition(pos);
+	infoWindow.setContent('Location found.');
+	infoWindow.open(map);
+	map.setCenter(pos);
+	}, () => {// Browser supports geolocation, but user has denied permission
+		handleLocationError(true, infoWindow);
+	   });
+	 }
+	}
+	
+	// This Function will create a SVG icon with angle and add/display that marker on the map
             function AddDPMarkerIco(data) {
 			//alert(data);
                 var icon = { // daft punk icon
